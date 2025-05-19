@@ -1,4 +1,6 @@
-﻿namespace String_Array_Methods
+﻿using System.Text;
+
+namespace String_Array_Methods
 {
     internal class Program
     {
@@ -123,48 +125,79 @@
             if (string.IsNullOrEmpty(text))
                 return false;
 
-            text = text.ToLower().Replace(" ", "");
-
-            for (int i = 0; i < text.Length / 2; i++)
+            StringBuilder newText = new StringBuilder();
+            foreach (char c in text)
             {
-                if (text[i] != text[text.Length - 1 - i])
+                if (!char.IsWhiteSpace(c))
+                    newText.Append(char.ToLower(c));
+            }
+            string cleanedText = newText.ToString();
+            for (int i = 0; i < cleanedText.Length / 2; i++)
+            {
+                if (cleanedText[i] != cleanedText[cleanedText.Length - 1 - i])
                     return false;
             }
-
             return true;
         }
 
+
         public static string RemoveDuplicateCharacters(string text)
         {
-            string result = "";
-
+            if (string.IsNullOrEmpty(text))
+                return text;
+            StringBuilder result = new StringBuilder();
 
             foreach (char c in text)
             {
-                if (result.IndexOf(c) == -1)
-                    result += c;
+                if (result.ToString().IndexOf(c) == -1)
+                    result.Append(c);
             }
-
-            return result;
+            return result.ToString();
         }
+
+
 
         public static void PrintWords(string text)
         {
-            string[] words = text.Split(' ');
-            foreach (string word in words)
+            if (string.IsNullOrWhiteSpace(text))
+                return;
+
+            StringBuilder wordBuilder = new StringBuilder();
+
+            foreach (char c in text)
             {
-                if (!string.IsNullOrWhiteSpace(word))
-                    Console.WriteLine(word);
+                if (!char.IsWhiteSpace(c))
+                {
+                    wordBuilder.Append(c);
+                }
+                else
+                {
+                    if (wordBuilder.Length > 0)
+                    {
+                        Console.WriteLine(wordBuilder.ToString());
+                        wordBuilder.Clear();
+                    }
+                }
             }
 
+            if (wordBuilder.Length > 0)
+                Console.WriteLine(wordBuilder.ToString());
         }
+
 
         public static void PrintFirstFourChars(string text)
         {
-            if (text.Length >= 4)
-                Console.WriteLine(text.Substring(0, 4));
-            else
+            if (string.IsNullOrEmpty(text) || text.Length < 4)
+            {
                 Console.WriteLine("Metnde 4 ve ya daha cox simvol yoxdur");
+                return;
+            }
+            StringBuilder firstFour = new StringBuilder();
+            for (int i = 0; i < 4; i++)
+            {
+                firstFour.Append(text[i]);
+            }
+            Console.WriteLine(firstFour.ToString());
         }
 
         public static string FindDomain(string email)
@@ -177,22 +210,28 @@
 
         public static bool IsOnlyLetters(string text)
         {
+            if (string.IsNullOrEmpty(text))
+                return false;
+            StringBuilder nonLetterBuilder = new StringBuilder();
             foreach (char c in text)
             {
-                if (!Char.IsLetter(c))
-                    return false;
+                if (!char.IsLetter(c))
+                    nonLetterBuilder.Append(c);
             }
-            return true;
+            return nonLetterBuilder.Length == 0;
         }
 
         public static string Capitalize(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
-
-            string firstLetter = text.Substring(0, 1).ToUpper(); 
-            string remainingText = text.Substring(1).ToLower(); 
-            return firstLetter + remainingText; 
+            StringBuilder result = new StringBuilder();
+            result.Append(char.ToUpper(text[0]));
+            for (int i = 1; i < text.Length; i++)
+            {
+                result.Append(char.ToLower(text[i]));
+            }
+            return result.ToString();
         }
 
         static string[] FirstNames(string[] fullNames)
